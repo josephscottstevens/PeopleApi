@@ -4,20 +4,26 @@ defmodule PeopleApiWeb.PageController do
   def index(conn, _params) do
     render conn, "index.html"
   end
-
+  
   def people(conn, _params) do
     api_key = Application.get_env(:people_api, :api_key)
-    #url = "https://api.sportradar.us/nba/trial/v4/en/games/2016/11/05/schedule.json?api_key=#{api_key}"
-    IO.inspect(api_key)
+
     headers = [ { "content-type", "application/json" }, { "authorization", "bearer #{api_key}"} ]
       
     response = 
       HTTPoison.get!("https://api.salesloft.com/v2/people.json", headers)
                     
-    IO.inspect("have a response: #{response.body}")
-    req = Poison.decode!(response.body)
-    IO.inspect(Map.fetch(req, "body"))
+    req = 
+      Poison.decode!(response.body)
 
-    json conn, "Some response"
+    people = 
+      Map.get(req, "data")
+      |> Enum.map (fn t -> 
+                    %{"display_name" => Map.get(t, "display_name") , "email_address" => Map.get(t, "email_address"), "title" => Map.get(t, "title")}
+                  end)
+  
+    peopleJson = Poison.encode!(people)
+
+    json conn, peopleJson
   end
 end
