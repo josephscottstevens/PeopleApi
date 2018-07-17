@@ -4,23 +4,26 @@ defmodule PeopleApiWeb.PageController do
   def index(conn, _params) do
     render conn, "index.html"
   end
-  
-  def people(conn, _params) do
+
+  defp getSalesloft(endpoint) do
     api_key = Application.get_env(:people_api, :api_key)
 
     headers = [ { "content-type", "application/json" }, { "authorization", "bearer #{api_key}"} ]
       
-    response = 
-      HTTPoison.get!("https://api.salesloft.com/v2/people.json", headers)
-                    
-    req = 
-      Poison.decode!(response.body)
+    response =
+      HTTPoison.get!("https://api.salesloft.com/v2/#{endpoint}", headers)
+    
+    Poison.decode!(response.body)
+  end
+
+  def people(conn, _params) do
+    req = getSalesloft("people.json")
 
     people = 
       Map.get(req, "data")
-      |> Enum.map (fn t -> 
+      |> (Enum.map (fn t -> 
                     %{"display_name" => Map.get(t, "display_name") , "email_address" => Map.get(t, "email_address"), "title" => Map.get(t, "title")}
-                  end)
+                  end))
   
     peopleJson = Poison.encode!(people)
 
