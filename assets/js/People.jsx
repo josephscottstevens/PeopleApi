@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { getPeople, showNone, showUniqueCharacters, showPossibleDuplicates } from './peopleActions.js'
+import { getPeople, showNone, showUniqueCharacters, showPossibleDuplicates, selectRow } from './peopleActions.js'
 
 class People extends React.Component {
   componentDidMount() {
@@ -9,11 +9,13 @@ class People extends React.Component {
   }
 
   renderRow(person) {
+    const backgroundColor = (this.props.rowId === person.id) ? "#eee" : "white";
     const divStyle = {
-      textAlign: "center"
+      textAlign: "center",
+      backgroundColor: backgroundColor
     };
     return (
-      <div key={person.id} style={divStyle} className="row">
+      <div key={person.id} style={divStyle} className="row tableRow" onClick={() => this.props.selectRowClick(person.id)}>
         <div className="col-sm-4">{person.title}</div>
         <div className="col-sm-4">{person.email_address}</div>
         <div className="col-sm-4">{person.display_name}</div>
@@ -36,7 +38,7 @@ class People extends React.Component {
   }
 
   render() {
-    const { error, people, isLoaded, showNoneClick, showUniqueCharactersClick, showPossibleDuplicatesClick } = this.props
+    const { error, people, isLoaded, show, showNoneClick, showUniqueCharactersClick, showPossibleDuplicatesClick } = this.props
     const btnStyle = {
       marginBottom: "12px",
       marginRight: "8px"
@@ -55,7 +57,7 @@ class People extends React.Component {
           </div>
 
           {this.renderHeader()}
-          {people.map(this.renderRow)}
+          {people.map(t => this.renderRow(t))}
         </div>
       );
     }
@@ -67,9 +69,11 @@ People.propTypes = {
   isLoaded: PropTypes.bool.isRequired,
   people: PropTypes.array.isRequired,
   show: PropTypes.string.isRequired,
+  rowId: PropTypes.number,
   showNoneClick: PropTypes.func.isRequired,
   showUniqueCharactersClick: PropTypes.func.isRequired,
-  showPossibleDuplicatesClick: PropTypes.func.isRequired
+  showPossibleDuplicatesClick: PropTypes.func.isRequired,
+  selectRowClick: PropTypes.func.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -77,13 +81,15 @@ const mapStateToProps = state => ({
   error: state.error,
   people: state.people,
   show: state.show,
+  rowId: state.rowId
 });
 
 const mapDispatchToProps = dispatch => ({
   getPeople: () => dispatch(getPeople()),
   showNoneClick: () => dispatch(showNone()),
   showUniqueCharactersClick: () => dispatch(showUniqueCharacters()),
-  showPossibleDuplicatesClick: () => dispatch(showPossibleDuplicates())
+  showPossibleDuplicatesClick: () => dispatch(showPossibleDuplicates()),
+  selectRowClick: rowId => dispatch(selectRow(rowId))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(People);
