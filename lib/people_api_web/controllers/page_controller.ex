@@ -22,7 +22,7 @@ defmodule PeopleApiWeb.PageController do
     people = 
       Map.get(req, "data")
       |> (Enum.map (fn t -> 
-                    %{"display_name" => Map.get(t, "display_name") , "email_address" => Map.get(t, "email_address"), "title" => Map.get(t, "title")}
+                    %{ "id" => Map.get(t, "id"), "display_name" => Map.get(t, "display_name") , "email_address" => Map.get(t, "email_address"), "title" => Map.get(t, "title")}
                   end))
   
     peopleJson = Poison.encode!(people)
