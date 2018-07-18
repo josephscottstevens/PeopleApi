@@ -1,3 +1,28 @@
+export const SELECT_ROW = "SELECT_ROW"
+export const selectRow = rowId => ({
+  type: SHOW_NONE,
+  rowId: rowId
+});
+
+export const SHOW_NONE = 'SHOW_NONE'
+export const SHOW_UNIQUE_CHARACTERS = 'SHOW_UNIQUE_CHARACTERS'
+export const SHOW_POSSIBLE_DUPLICATES = 'SHOW_POSSIBLE_DUPLICATES'
+
+export const showNone = () => ({
+  type: SHOW_NONE,
+  show: "NONE"
+});
+
+export const showUniqueCharacters = () => ({
+  type: SHOW_UNIQUE_CHARACTERS,
+  show: "UNIQUE_CHARACTERS"
+});
+
+export const showPossibleDuplicates = () => ({
+  type: SHOW_NONE,
+  show: "POSSIBLE_DUPLICATES"
+});
+
 export const FETCH_PEOPLE = 'FETCH_PEOPLE'
 export const FETCH_PEOPLE_SUCCESS = 'FETCH_PEOPLE_SUCCESS'
 export const FETCH_PEOPLE_FAILURE = 'FETCH_PEOPLE_FAILURE'
