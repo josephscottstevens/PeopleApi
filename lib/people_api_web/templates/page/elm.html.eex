@@ -1,0 +1,6 @@
+<div id="elmRoot"></div>
+
+<script>
+  var node = document.getElementById('elmRoot');
+  var app = Elm.Main.embed(node);
+</script>

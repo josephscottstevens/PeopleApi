@@ -5,6 +5,10 @@ defmodule PeopleApiWeb.PageController do
     render conn, "index.html"
   end
 
+  def elm(conn, _params) do
+    render conn, "elm.html"
+  end
+
   defp getSalesloft(endpoint) do
     api_key = Application.get_env(:people_api, :api_key)
 

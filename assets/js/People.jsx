@@ -100,7 +100,8 @@ class People extends React.Component {
             <div key="-1" className="row">
               <button style={btnStyle} type="button" onClick={showNoneClick} className={btnClass("NONE")}>Show None</button>
               <button style={btnStyle} type="button" onClick={showUniqueCharactersClick} className={btnClass("UNIQUE_CHARACTERS")}>Show Unique Characters</button>
-              <button style={btnStyle} type="button" onClick={showPossibleDuplicatesClick} className={btnClass("POSSIBLE_DUPLICATES")}>Show Unique Characters</button>
+              <button style={btnStyle} type="button" onClick={showPossibleDuplicatesClick} className={btnClass("POSSIBLE_DUPLICATES")}>Show Possible Duplicates</button>
+              <a id="toggleLink" src="./elm">Elm Version</a>
             </div>
 
             {this.renderHeader()}

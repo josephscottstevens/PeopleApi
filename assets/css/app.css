@@ -1,6 +1,10 @@
-/* This file is for your main application css. */
+#toggleLink {
+  float: right;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
 .tableRow:hover {
-  /* background-color: #f6f6f6 !important; */
   background-color: #f6f6f6 !important
 }
 

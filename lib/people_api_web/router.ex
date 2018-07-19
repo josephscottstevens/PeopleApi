@@ -17,6 +17,7 @@ defmodule PeopleApiWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    get "/elm", PageController, :elm
     get "/people", PageController, :people
   end
 
