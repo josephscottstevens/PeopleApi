@@ -14,7 +14,7 @@ const initialState =
   isLoaded: false,
   people: [],
   show: "NONE",
-  selectedRow: null
+  rowId: null
 };
 
 export default function peopleReducer(state = initialState, action) {

@@ -1,6 +1,6 @@
 export const SELECT_ROW = "SELECT_ROW"
 export const selectRow = rowId => ({
-  type: SHOW_NONE,
+  type: SELECT_ROW,
   rowId: rowId
 });
 
@@ -33,7 +33,7 @@ export const fetchPeople = () => ({
 
 export const fetchPeopleSuccess = people => ({
   type: FETCH_PEOPLE_SUCCESS,
-  people: JSON.parse(people)
+  people: people
 });
 
 export const fetchPeopleFailure = error => ({
@@ -46,7 +46,7 @@ export function getPeople() {
     dispatch(fetchPeople())
     return fetch("http://localhost:4000/people").then(response => response.json()).then(
       (result) => {
-        dispatch(fetchPeopleSuccess(result))
+        dispatch(fetchPeopleSuccess(JSON.parse(result)))
       },
       (error) => {
         dispatch(fetchPeopleFailure(error))
