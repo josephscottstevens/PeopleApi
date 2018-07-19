@@ -3,6 +3,11 @@ defmodule PeopleApiWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get conn, "/"
-    assert html_response(conn, 200) =~ "Welcome to Phoenix!"
+    assert html_response(conn, 200) =~ "<title>Hello PeopleApi!</title>"
+  end
+
+  test "GET /people", %{conn: conn} do
+    conn = get conn, "/people"
+    assert json_response(conn, 200) =~ "{\"title\":"
   end
 end
