@@ -1,4 +1,5 @@
 <div id="elmRoot"></div>
+<script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
 
 <script>
   var node = document.getElementById('elmRoot');

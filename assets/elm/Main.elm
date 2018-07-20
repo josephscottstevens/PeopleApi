@@ -1,10 +1,9 @@
---elm-make assets\elm\Main.elm --output=assets\vendor\elmApp.js
-
-
 module Main exposing (main)
 
+--elm-make assets\elm\Main.elm --output=assets\vendor\elmApp.js
+
 import Html exposing (..)
-import Html.Attributes exposing (class, type_, style)
+import Html.Attributes exposing (class, type_, style, href, id)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode
@@ -123,7 +122,7 @@ renderRow rowId person =
             , ( "background-color", backgroundColor )
             ]
     in
-        div [ style divStyle, onClick (SelectRow person.id) ]
+        div [ style divStyle, onClick (SelectRow person.id), class "row tableRow" ]
             [ div [ class "col-sm-4" ] [ text person.title ]
             , div [ class "col-sm-4" ] [ text person.email_address ]
             , div [ class "col-sm-4" ] [ text person.display_name ]
@@ -157,7 +156,7 @@ renderTable headers rows =
         headerHelper t =
             th [] [ text t ]
     in
-        table []
+        table [ id "peopleTable" ]
             [ thead []
                 [ tr [] <|
                     List.map headerHelper headers
@@ -230,14 +229,21 @@ render model people =
                         [ style btnStyle
                         , onClick ShowUniqueCharacters
                         , type_ "button"
+                        , class (className UniqueCharacters)
                         ]
                         [ text "Show Unique Characters" ]
                     , button
                         [ style btnStyle
                         , onClick ShowPossibleDuplicates
                         , type_ "button"
+                        , class (className PossibleDuplicates)
                         ]
                         [ text "Show Possible Duplicates" ]
+                    , a
+                        [ href "./"
+                        , id "toggleLink"
+                        ]
+                        [ text "React Version!" ]
                     ]
                 , renderHeader
                 , div [] <|

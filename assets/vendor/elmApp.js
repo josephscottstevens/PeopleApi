@@ -10964,7 +10964,11 @@ var _user$project$Main$renderTable = F2(
 		};
 		return A2(
 			_elm_lang$html$Html$table,
-			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$id('peopleTable'),
+				_1: {ctor: '[]'}
+			},
 			{
 				ctor: '::',
 				_0: A2(
@@ -11245,7 +11249,11 @@ var _user$project$Main$renderRow = F2(
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(
 						_user$project$Main$SelectRow(person.id)),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('row tableRow'),
+						_1: {ctor: '[]'}
+					}
 				}
 			},
 			{
@@ -11377,7 +11385,12 @@ var _user$project$Main$render = F2(
 												_1: {
 													ctor: '::',
 													_0: _elm_lang$html$Html_Attributes$type_('button'),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class(
+															className(_user$project$Main$UniqueCharacters)),
+														_1: {ctor: '[]'}
+													}
 												}
 											}
 										},
@@ -11399,7 +11412,12 @@ var _user$project$Main$render = F2(
 													_1: {
 														ctor: '::',
 														_0: _elm_lang$html$Html_Attributes$type_('button'),
-														_1: {ctor: '[]'}
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class(
+																className(_user$project$Main$PossibleDuplicates)),
+															_1: {ctor: '[]'}
+														}
 													}
 												}
 											},
@@ -11408,7 +11426,26 @@ var _user$project$Main$render = F2(
 												_0: _elm_lang$html$Html$text('Show Possible Duplicates'),
 												_1: {ctor: '[]'}
 											}),
-										_1: {ctor: '[]'}
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$a,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$href('./'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$id('toggleLink'),
+														_1: {ctor: '[]'}
+													}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('React Version!'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
 									}
 								}
 							}),
