@@ -10827,7 +10827,7 @@ var _emilianobovetti$edit_distance$EditDistance$levenshteinOfStrings = F2(
 			_elm_lang$core$String$toList(pattern));
 	});
 
-var _user$project$Assets_Elm_Functions$countHelper = function (chars) {
+var _user$project$Src_Functions$countHelper = function (chars) {
 	var len = _elm_lang$core$List$length(chars);
 	var $char = _elm_lang$core$String$fromChar(
 		A2(
@@ -10840,28 +10840,28 @@ var _user$project$Assets_Elm_Functions$countHelper = function (chars) {
 		_1: _elm_lang$core$Basics$toString(len)
 	};
 };
-var _user$project$Assets_Elm_Functions$countCharacters = function (str) {
+var _user$project$Src_Functions$countCharacters = function (str) {
 	return A2(
 		_elm_lang$core$List$map,
-		_user$project$Assets_Elm_Functions$countHelper,
+		_user$project$Src_Functions$countHelper,
 		_elm_community$list_extra$List_Extra$group(
 			_elm_lang$core$String$toList(str)));
 };
-var _user$project$Assets_Elm_Functions$isMin = F3(
+var _user$project$Src_Functions$isMin = F3(
 	function (t, y, minDistance) {
 		return (_elm_lang$core$Native_Utils.cmp(
 			A2(_emilianobovetti$edit_distance$EditDistance$levenshteinOfStrings, t, y),
 			minDistance) < 1) ? _elm_lang$core$Maybe$Just(
 			{ctor: '_Tuple2', _0: t, _1: y}) : _elm_lang$core$Maybe$Nothing;
 	});
-var _user$project$Assets_Elm_Functions$onlyDupes = F2(
+var _user$project$Src_Functions$onlyDupes = F2(
 	function (items, minDistance) {
 		var helper = F2(
 			function (idx, t) {
 				return A2(
 					_elm_lang$core$List$filterMap,
 					function (y) {
-						return A3(_user$project$Assets_Elm_Functions$isMin, t, y, 2);
+						return A3(_user$project$Src_Functions$isMin, t, y, 2);
 					},
 					A2(_elm_lang$core$List$take, idx, items));
 			});
@@ -10896,7 +10896,7 @@ var _user$project$Main$countCharactersHelper = F2(
 			{ctor: '[]'},
 			A2(
 				_elm_lang$core$Maybe$map,
-				_user$project$Assets_Elm_Functions$countCharacters,
+				_user$project$Src_Functions$countCharacters,
 				_elm_lang$core$List$head(
 					A2(
 						_elm_lang$core$List$map,
@@ -10912,7 +10912,7 @@ var _user$project$Main$countCharactersHelper = F2(
 	});
 var _user$project$Main$possibleDuplicates = function (people) {
 	return function (t) {
-		return A2(_user$project$Assets_Elm_Functions$onlyDupes, t, 2);
+		return A2(_user$project$Src_Functions$onlyDupes, t, 2);
 	}(
 		A2(
 			_elm_lang$core$List$map,
@@ -11055,8 +11055,12 @@ var _user$project$Main$renderHeader = function () {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('row'),
-			_1: {ctor: '[]'}
+			_0: _elm_lang$html$Html_Attributes$style(divStyle),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('row'),
+				_1: {ctor: '[]'}
+			}
 		},
 		{
 			ctor: '::',

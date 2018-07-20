@@ -1,4 +1,4 @@
-module Assets.Elm.Functions exposing (onlyDupes, countCharacters)
+module Src.Functions exposing (onlyDupes, countCharacters)
 
 import EditDistance
 import List.Extra as List

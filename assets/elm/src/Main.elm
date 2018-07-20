@@ -1,14 +1,12 @@
 module Main exposing (main)
 
---elm-make assets\elm\Main.elm --output=assets\vendor\elmApp.js
-
 import Html exposing (..)
 import Html.Attributes exposing (class, type_, style, href, id)
 import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (decode, required)
-import Assets.Elm.Functions exposing (onlyDupes, countCharacters)
+import Src.Functions exposing (onlyDupes, countCharacters)
 
 
 main : Program Never Model Msg
@@ -137,7 +135,7 @@ renderHeader =
             , ( "font-weight", "bold" )
             ]
     in
-        div [ class "row" ]
+        div [ style divStyle, class "row" ]
             [ div [ class "col-sm-4" ] [ text "Title" ]
             , div [ class "col-sm-4" ] [ text "Email Address" ]
             , div [ class "col-sm-4" ] [ text "Display Name" ]

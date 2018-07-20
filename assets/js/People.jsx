@@ -101,7 +101,7 @@ class People extends React.Component {
               <button style={btnStyle} type="button" onClick={showNoneClick} className={btnClass("NONE")}>Show None</button>
               <button style={btnStyle} type="button" onClick={showUniqueCharactersClick} className={btnClass("UNIQUE_CHARACTERS")}>Show Unique Characters</button>
               <button style={btnStyle} type="button" onClick={showPossibleDuplicatesClick} className={btnClass("POSSIBLE_DUPLICATES")}>Show Possible Duplicates</button>
-              <a id="toggleLink" href="./elm">Elm Version</a>
+              <a id="toggleLink" href="./elm">Elm Version!</a>
             </div>
 
             {this.renderHeader()}
