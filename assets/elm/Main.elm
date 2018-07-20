@@ -3,94 +3,9 @@ module Main exposing (main)
 import Html exposing (..)
 import Html.Attributes exposing (class, type_, style, href, id)
 import Html.Events exposing (onClick)
-import Http
-import Json.Decode as Decode
-import Json.Decode.Pipeline exposing (decode, required)
-import Src.Functions exposing (onlyDupes, countCharacters)
-
-
-main : Program Never Model Msg
-main =
-    Html.program
-        { init = init
-        , view = view
-        , update = update
-        , subscriptions = subscriptions
-        }
-
-
-type alias People =
-    { id : Int
-    , display_name : String
-    , email_address : String
-    , title : String
-    }
-
-
-type State
-    = Loading
-    | Error String
-    | Loaded (List People)
-
-
-type ShowType
-    = None
-    | UniqueCharacters
-    | PossibleDuplicates
-
-
-type alias Model =
-    { state : State
-    , rowId : Maybe Int
-    , showType : ShowType
-    }
-
-
-type Msg
-    = FetchPeople (Result Http.Error String)
-    | ShowNone
-    | ShowUniqueCharacters
-    | ShowPossibleDuplicates
-    | SelectRow Int
-
-
-update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-    case msg of
-        FetchPeople (Ok peopleStr) ->
-            ( case Decode.decodeString (Decode.list decodePeople) peopleStr of
-                Ok people ->
-                    { model | state = Loaded (filterPeople people) }
-
-                Err err ->
-                    { model | state = Error (toString err) }
-            , Cmd.none
-            )
-
-        FetchPeople (Err err) ->
-            ( { model | state = Error (toString err) }
-            , Cmd.none
-            )
-
-        ShowNone ->
-            ( { model | showType = None }
-            , Cmd.none
-            )
-
-        ShowUniqueCharacters ->
-            ( { model | showType = UniqueCharacters }
-            , Cmd.none
-            )
-
-        ShowPossibleDuplicates ->
-            ( { model | showType = PossibleDuplicates }
-            , Cmd.none
-            )
-
-        SelectRow rowId ->
-            ( { model | rowId = Just rowId }
-            , Cmd.none
-            )
+import Functions exposing (onlyDupes, countCharacters)
+import PeopleActions exposing (Model, People, State(..), ShowType(..), Msg(..), loadPeople)
+import PeopleReducer exposing (init, update)
 
 
 view : Model -> Html Msg
@@ -253,55 +168,11 @@ render model people =
             ]
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
-
-
-type alias MaybePeople =
-    { id : Maybe Int
-    , display_name : Maybe String
-    , email_address : Maybe String
-    , title : Maybe String
-    }
-
-
-filterPeopleHelper : MaybePeople -> Maybe People
-filterPeopleHelper maybePeople =
-    case ( maybePeople.id, maybePeople.email_address ) of
-        ( Just id, Just email ) ->
-            Just
-                { id = id
-                , display_name = Maybe.withDefault "" maybePeople.display_name
-                , email_address = email
-                , title = Maybe.withDefault "" maybePeople.title
-                }
-
-        _ ->
-            Nothing
-
-
-filterPeople : List MaybePeople -> List People
-filterPeople maybePeoples =
-    List.filterMap filterPeopleHelper maybePeoples
-
-
-decodePeople : Decode.Decoder MaybePeople
-decodePeople =
-    decode MaybePeople
-        |> required "id" (Decode.maybe Decode.int)
-        |> required "display_name" (Decode.maybe Decode.string)
-        |> required "email_address" (Decode.maybe Decode.string)
-        |> required "title" (Decode.maybe Decode.string)
-
-
-init : ( Model, Cmd Msg )
-init =
-    ( { state = Loading
-      , rowId = Nothing
-      , showType = None
-      }
-    , Decode.string
-        |> Http.get "http://localhost:4000/people"
-        |> Http.send FetchPeople
-    )
+main : Program Never Model Msg
+main =
+    Html.program
+        { init = init
+        , view = view
+        , update = update
+        , subscriptions = \_ -> Sub.none
+        }

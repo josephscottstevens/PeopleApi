@@ -10827,7 +10827,7 @@ var _emilianobovetti$edit_distance$EditDistance$levenshteinOfStrings = F2(
 			_elm_lang$core$String$toList(pattern));
 	});
 
-var _user$project$Src_Functions$countHelper = function (chars) {
+var _user$project$Functions$countHelper = function (chars) {
 	var len = _elm_lang$core$List$length(chars);
 	var $char = _elm_lang$core$String$fromChar(
 		A2(
@@ -10840,28 +10840,28 @@ var _user$project$Src_Functions$countHelper = function (chars) {
 		_1: _elm_lang$core$Basics$toString(len)
 	};
 };
-var _user$project$Src_Functions$countCharacters = function (str) {
+var _user$project$Functions$countCharacters = function (str) {
 	return A2(
 		_elm_lang$core$List$map,
-		_user$project$Src_Functions$countHelper,
+		_user$project$Functions$countHelper,
 		_elm_community$list_extra$List_Extra$group(
 			_elm_lang$core$String$toList(str)));
 };
-var _user$project$Src_Functions$isMin = F3(
+var _user$project$Functions$isMin = F3(
 	function (t, y, minDistance) {
 		return (_elm_lang$core$Native_Utils.cmp(
 			A2(_emilianobovetti$edit_distance$EditDistance$levenshteinOfStrings, t, y),
 			minDistance) < 1) ? _elm_lang$core$Maybe$Just(
 			{ctor: '_Tuple2', _0: t, _1: y}) : _elm_lang$core$Maybe$Nothing;
 	});
-var _user$project$Src_Functions$onlyDupes = F2(
+var _user$project$Functions$onlyDupes = F2(
 	function (items, minDistance) {
 		var helper = F2(
 			function (idx, t) {
 				return A2(
 					_elm_lang$core$List$filterMap,
 					function (y) {
-						return A3(_user$project$Src_Functions$isMin, t, y, 2);
+						return A3(_user$project$Functions$isMin, t, y, 2);
 					},
 					A2(_elm_lang$core$List$take, idx, items));
 			});
@@ -10869,7 +10869,7 @@ var _user$project$Src_Functions$onlyDupes = F2(
 			A2(_elm_lang$core$List$indexedMap, helper, items));
 	});
 
-var _user$project$Main$filterPeopleHelper = function (maybePeople) {
+var _user$project$PeopleActions$filterPeopleHelper = function (maybePeople) {
 	var _p0 = {ctor: '_Tuple2', _0: maybePeople.id, _1: maybePeople.email_address};
 	if (((_p0.ctor === '_Tuple2') && (_p0._0.ctor === 'Just')) && (_p0._1.ctor === 'Just')) {
 		return _elm_lang$core$Maybe$Just(
@@ -10883,12 +10883,149 @@ var _user$project$Main$filterPeopleHelper = function (maybePeople) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _user$project$Main$filterPeople = function (maybePeoples) {
-	return A2(_elm_lang$core$List$filterMap, _user$project$Main$filterPeopleHelper, maybePeoples);
+var _user$project$PeopleActions$filterPeople = function (maybePeoples) {
+	return A2(_elm_lang$core$List$filterMap, _user$project$PeopleActions$filterPeopleHelper, maybePeoples);
 };
-var _user$project$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
+var _user$project$PeopleActions$People = F4(
+	function (a, b, c, d) {
+		return {id: a, display_name: b, email_address: c, title: d};
+	});
+var _user$project$PeopleActions$Model = F3(
+	function (a, b, c) {
+		return {state: a, rowId: b, showType: c};
+	});
+var _user$project$PeopleActions$MaybePeople = F4(
+	function (a, b, c, d) {
+		return {id: a, display_name: b, email_address: c, title: d};
+	});
+var _user$project$PeopleActions$decodePeople = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'title',
+	_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$string),
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'email_address',
+		_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$string),
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'display_name',
+			_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$string),
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+				'id',
+				_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$int),
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$PeopleActions$MaybePeople)))));
+var _user$project$PeopleActions$Loaded = function (a) {
+	return {ctor: 'Loaded', _0: a};
 };
+var _user$project$PeopleActions$Error = function (a) {
+	return {ctor: 'Error', _0: a};
+};
+var _user$project$PeopleActions$loadPeople = F2(
+	function (model, peopleStr) {
+		var _p1 = A2(
+			_elm_lang$core$Json_Decode$decodeString,
+			_elm_lang$core$Json_Decode$list(_user$project$PeopleActions$decodePeople),
+			peopleStr);
+		if (_p1.ctor === 'Ok') {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					state: _user$project$PeopleActions$Loaded(
+						_user$project$PeopleActions$filterPeople(_p1._0))
+				});
+		} else {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					state: _user$project$PeopleActions$Error(
+						_elm_lang$core$Basics$toString(_p1._0))
+				});
+		}
+	});
+var _user$project$PeopleActions$Loading = {ctor: 'Loading'};
+var _user$project$PeopleActions$PossibleDuplicates = {ctor: 'PossibleDuplicates'};
+var _user$project$PeopleActions$UniqueCharacters = {ctor: 'UniqueCharacters'};
+var _user$project$PeopleActions$None = {ctor: 'None'};
+var _user$project$PeopleActions$SelectRow = function (a) {
+	return {ctor: 'SelectRow', _0: a};
+};
+var _user$project$PeopleActions$ShowPossibleDuplicates = {ctor: 'ShowPossibleDuplicates'};
+var _user$project$PeopleActions$ShowUniqueCharacters = {ctor: 'ShowUniqueCharacters'};
+var _user$project$PeopleActions$ShowNone = {ctor: 'ShowNone'};
+var _user$project$PeopleActions$FetchPeople = function (a) {
+	return {ctor: 'FetchPeople', _0: a};
+};
+var _user$project$PeopleActions$getPeople = A2(
+	_elm_lang$http$Http$send,
+	_user$project$PeopleActions$FetchPeople,
+	A2(_elm_lang$http$Http$get, 'http://localhost:4000/people', _elm_lang$core$Json_Decode$string));
+
+var _user$project$PeopleReducer$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
+			case 'FetchPeople':
+				if (_p0._0.ctor === 'Ok') {
+					return {
+						ctor: '_Tuple2',
+						_0: A2(_user$project$PeopleActions$loadPeople, model, _p0._0._0),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				} else {
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								state: _user$project$PeopleActions$Error(
+									_elm_lang$core$Basics$toString(_p0._0._0))
+							}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				}
+			case 'ShowNone':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{showType: _user$project$PeopleActions$None}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ShowUniqueCharacters':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{showType: _user$project$PeopleActions$UniqueCharacters}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'ShowPossibleDuplicates':
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{showType: _user$project$PeopleActions$PossibleDuplicates}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			default:
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							rowId: _elm_lang$core$Maybe$Just(_p0._0)
+						}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+		}
+	});
+var _user$project$PeopleReducer$init = {
+	ctor: '_Tuple2',
+	_0: {state: _user$project$PeopleActions$Loading, rowId: _elm_lang$core$Maybe$Nothing, showType: _user$project$PeopleActions$None},
+	_1: _user$project$PeopleActions$getPeople
+};
+
 var _user$project$Main$countCharactersHelper = F2(
 	function (people, rowId) {
 		return A2(
@@ -10896,7 +11033,7 @@ var _user$project$Main$countCharactersHelper = F2(
 			{ctor: '[]'},
 			A2(
 				_elm_lang$core$Maybe$map,
-				_user$project$Src_Functions$countCharacters,
+				_user$project$Functions$countCharacters,
 				_elm_lang$core$List$head(
 					A2(
 						_elm_lang$core$List$map,
@@ -10912,7 +11049,7 @@ var _user$project$Main$countCharactersHelper = F2(
 	});
 var _user$project$Main$possibleDuplicates = function (people) {
 	return function (t) {
-		return A2(_user$project$Src_Functions$onlyDupes, t, 2);
+		return A2(_user$project$Functions$onlyDupes, t, 2);
 	}(
 		A2(
 			_elm_lang$core$List$map,
@@ -10933,8 +11070,8 @@ var _user$project$Main$renderTable = F2(
 					_1: {ctor: '[]'}
 				});
 		};
-		var bodyHelper = function (_p1) {
-			var _p2 = _p1;
+		var bodyHelper = function (_p0) {
+			var _p1 = _p0;
 			return A2(
 				_elm_lang$html$Html$tr,
 				{ctor: '[]'},
@@ -10945,7 +11082,7 @@ var _user$project$Main$renderTable = F2(
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(_p2._0),
+							_0: _elm_lang$html$Html$text(_p1._0),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -10955,7 +11092,7 @@ var _user$project$Main$renderTable = F2(
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(_p2._1),
+								_0: _elm_lang$html$Html$text(_p1._1),
 								_1: {ctor: '[]'}
 							}),
 						_1: {ctor: '[]'}
@@ -10994,16 +11131,16 @@ var _user$project$Main$renderTable = F2(
 	});
 var _user$project$Main$renderDetails = F2(
 	function (model, people) {
-		var _p3 = model.showType;
-		switch (_p3.ctor) {
+		var _p2 = model.showType;
+		switch (_p2.ctor) {
 			case 'None':
 				return A2(
 					_elm_lang$html$Html$div,
 					{ctor: '[]'},
 					{ctor: '[]'});
 			case 'UniqueCharacters':
-				var _p4 = model.rowId;
-				if (_p4.ctor === 'Just') {
+				var _p3 = model.rowId;
+				if (_p3.ctor === 'Just') {
 					return A2(
 						_user$project$Main$renderTable,
 						{
@@ -11015,7 +11152,7 @@ var _user$project$Main$renderDetails = F2(
 								_1: {ctor: '[]'}
 							}
 						},
-						A2(_user$project$Main$countCharactersHelper, people, _p4._0));
+						A2(_user$project$Main$countCharactersHelper, people, _p3._0));
 				} else {
 					return A2(
 						_elm_lang$html$Html$h4,
@@ -11109,127 +11246,6 @@ var _user$project$Main$renderHeader = function () {
 			}
 		});
 }();
-var _user$project$Main$People = F4(
-	function (a, b, c, d) {
-		return {id: a, display_name: b, email_address: c, title: d};
-	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {state: a, rowId: b, showType: c};
-	});
-var _user$project$Main$MaybePeople = F4(
-	function (a, b, c, d) {
-		return {id: a, display_name: b, email_address: c, title: d};
-	});
-var _user$project$Main$decodePeople = A3(
-	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-	'title',
-	_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$string),
-	A3(
-		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-		'email_address',
-		_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$string),
-		A3(
-			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-			'display_name',
-			_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$string),
-			A3(
-				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
-				'id',
-				_elm_lang$core$Json_Decode$maybe(_elm_lang$core$Json_Decode$int),
-				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Main$MaybePeople)))));
-var _user$project$Main$Loaded = function (a) {
-	return {ctor: 'Loaded', _0: a};
-};
-var _user$project$Main$Error = function (a) {
-	return {ctor: 'Error', _0: a};
-};
-var _user$project$Main$Loading = {ctor: 'Loading'};
-var _user$project$Main$PossibleDuplicates = {ctor: 'PossibleDuplicates'};
-var _user$project$Main$UniqueCharacters = {ctor: 'UniqueCharacters'};
-var _user$project$Main$None = {ctor: 'None'};
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p5 = msg;
-		switch (_p5.ctor) {
-			case 'FetchPeople':
-				if (_p5._0.ctor === 'Ok') {
-					return {
-						ctor: '_Tuple2',
-						_0: function () {
-							var _p6 = A2(
-								_elm_lang$core$Json_Decode$decodeString,
-								_elm_lang$core$Json_Decode$list(_user$project$Main$decodePeople),
-								_p5._0._0);
-							if (_p6.ctor === 'Ok') {
-								return _elm_lang$core$Native_Utils.update(
-									model,
-									{
-										state: _user$project$Main$Loaded(
-											_user$project$Main$filterPeople(_p6._0))
-									});
-							} else {
-								return _elm_lang$core$Native_Utils.update(
-									model,
-									{
-										state: _user$project$Main$Error(
-											_elm_lang$core$Basics$toString(_p6._0))
-									});
-							}
-						}(),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				} else {
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								state: _user$project$Main$Error(
-									_elm_lang$core$Basics$toString(_p5._0._0))
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				}
-			case 'ShowNone':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{showType: _user$project$Main$None}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ShowUniqueCharacters':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{showType: _user$project$Main$UniqueCharacters}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'ShowPossibleDuplicates':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{showType: _user$project$Main$PossibleDuplicates}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							rowId: _elm_lang$core$Maybe$Just(_p5._0)
-						}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-		}
-	});
-var _user$project$Main$SelectRow = function (a) {
-	return {ctor: 'SelectRow', _0: a};
-};
 var _user$project$Main$renderRow = F2(
 	function (rowId, person) {
 		var backgroundColor = _elm_lang$core$Native_Utils.eq(
@@ -11252,7 +11268,7 @@ var _user$project$Main$renderRow = F2(
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$Main$SelectRow(person.id)),
+						_user$project$PeopleActions$SelectRow(person.id)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$class('row tableRow'),
@@ -11307,9 +11323,6 @@ var _user$project$Main$renderRow = F2(
 				}
 			});
 	});
-var _user$project$Main$ShowPossibleDuplicates = {ctor: 'ShowPossibleDuplicates'};
-var _user$project$Main$ShowUniqueCharacters = {ctor: 'ShowUniqueCharacters'};
-var _user$project$Main$ShowNone = {ctor: 'ShowNone'};
 var _user$project$Main$render = F2(
 	function (model, people) {
 		var className = function (t) {
@@ -11358,14 +11371,14 @@ var _user$project$Main$render = F2(
 										_0: _elm_lang$html$Html_Attributes$style(btnStyle),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowNone),
+											_0: _elm_lang$html$Html_Events$onClick(_user$project$PeopleActions$ShowNone),
 											_1: {
 												ctor: '::',
 												_0: _elm_lang$html$Html_Attributes$type_('button'),
 												_1: {
 													ctor: '::',
 													_0: _elm_lang$html$Html_Attributes$class(
-														className(_user$project$Main$None)),
+														className(_user$project$PeopleActions$None)),
 													_1: {ctor: '[]'}
 												}
 											}
@@ -11385,14 +11398,14 @@ var _user$project$Main$render = F2(
 											_0: _elm_lang$html$Html_Attributes$style(btnStyle),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowUniqueCharacters),
+												_0: _elm_lang$html$Html_Events$onClick(_user$project$PeopleActions$ShowUniqueCharacters),
 												_1: {
 													ctor: '::',
 													_0: _elm_lang$html$Html_Attributes$type_('button'),
 													_1: {
 														ctor: '::',
 														_0: _elm_lang$html$Html_Attributes$class(
-															className(_user$project$Main$UniqueCharacters)),
+															className(_user$project$PeopleActions$UniqueCharacters)),
 														_1: {ctor: '[]'}
 													}
 												}
@@ -11412,14 +11425,14 @@ var _user$project$Main$render = F2(
 												_0: _elm_lang$html$Html_Attributes$style(btnStyle),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$ShowPossibleDuplicates),
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$PeopleActions$ShowPossibleDuplicates),
 													_1: {
 														ctor: '::',
 														_0: _elm_lang$html$Html_Attributes$type_('button'),
 														_1: {
 															ctor: '::',
 															_0: _elm_lang$html$Html_Attributes$class(
-																className(_user$project$Main$PossibleDuplicates)),
+																className(_user$project$PeopleActions$PossibleDuplicates)),
 															_1: {ctor: '[]'}
 														}
 													}
@@ -11490,8 +11503,8 @@ var _user$project$Main$render = F2(
 			});
 	});
 var _user$project$Main$view = function (model) {
-	var _p7 = model.state;
-	switch (_p7.ctor) {
+	var _p4 = model.state;
+	switch (_p4.ctor) {
 		case 'Loading':
 			return A2(
 				_elm_lang$html$Html$div,
@@ -11507,26 +11520,22 @@ var _user$project$Main$view = function (model) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(_p7._0),
+					_0: _elm_lang$html$Html$text(_p4._0),
 					_1: {ctor: '[]'}
 				});
 		default:
-			return A2(_user$project$Main$render, model, _p7._0);
+			return A2(_user$project$Main$render, model, _p4._0);
 	}
 };
-var _user$project$Main$FetchPeople = function (a) {
-	return {ctor: 'FetchPeople', _0: a};
-};
-var _user$project$Main$init = {
-	ctor: '_Tuple2',
-	_0: {state: _user$project$Main$Loading, rowId: _elm_lang$core$Maybe$Nothing, showType: _user$project$Main$None},
-	_1: A2(
-		_elm_lang$http$Http$send,
-		_user$project$Main$FetchPeople,
-		A2(_elm_lang$http$Http$get, 'http://localhost:4000/people', _elm_lang$core$Json_Decode$string))
-};
 var _user$project$Main$main = _elm_lang$html$Html$program(
-	{init: _user$project$Main$init, view: _user$project$Main$view, update: _user$project$Main$update, subscriptions: _user$project$Main$subscriptions})();
+	{
+		init: _user$project$PeopleReducer$init,
+		view: _user$project$Main$view,
+		update: _user$project$PeopleReducer$update,
+		subscriptions: function (_p5) {
+			return _elm_lang$core$Platform_Sub$none;
+		}
+	})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
