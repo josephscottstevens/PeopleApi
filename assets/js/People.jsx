@@ -70,7 +70,6 @@ class People extends React.Component {
       return (this.renderTable("peopleTable", ["Character", "Count"], entries));
     } else if (this.props.show == "POSSIBLE_DUPLICATES") {
       const emails = this.props.people.map(t => t.email_address);
-      //emails.push("miwnie_nisozz@damore.net"); // For testing
       const possibleDupes = listPossibleDupes(emails, 2);
       return (this.renderTable("peopleTable", ["Possible Duplicates", ""], possibleDupes));
     } else {

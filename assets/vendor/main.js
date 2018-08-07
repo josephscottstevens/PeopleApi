@@ -10845,7 +10845,8 @@ var _user$project$Src_Functions$countCharacters = function (str) {
 		_elm_lang$core$List$map,
 		_user$project$Src_Functions$countHelper,
 		_elm_community$list_extra$List_Extra$group(
-			_elm_lang$core$String$toList(str)));
+			_elm_lang$core$List$sort(
+				_elm_lang$core$String$toList(str))));
 };
 var _user$project$Src_Functions$isMin = F3(
 	function (t, y, minDistance) {

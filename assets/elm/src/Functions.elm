@@ -45,5 +45,6 @@ countCharacters : String -> List ( String, String )
 countCharacters str =
     str
         |> String.toList
+        |> List.sort
         |> List.group
         |> List.map countHelper
